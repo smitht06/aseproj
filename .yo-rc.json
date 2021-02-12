@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "edu.uwf.cen6030"
+    },
+    "jhipsterVersion": "6.10.5",
+    "applicationType": "monolith",
+    "baseName": "CourseMaster3K",
+    "packageName": "edu.uwf.cen6030",
+    "packageFolder": "edu/uwf/cen6030",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "OWU0ZTg5MjY2OTk0ZTQ4ZWY4YzQ2ZWIzZjk0OGQwY2YwM2NjNmJjMDU5NzgyMzNjMjg1OTEwMDVjNTMxYTlmOWE4Yzc5ZjYzYTk4MTQxZmYwODdlZmM0MmM2NmZlMjI3NjJkY2ZiZjFhNTdhM2YyZThhMDUzOTViOWEzMzgyZTU=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1613166697058,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
