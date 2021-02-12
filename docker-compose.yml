@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres:11.6-alpine
+
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: CourseMaster3KDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: s3cret
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+
