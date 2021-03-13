@@ -6,7 +6,7 @@ export interface IChapter {
   name?: string;
   description?: string;
   courseId?: number;
-  consistsOfs?: IMaterial[];
+  materials?: IMaterial[];
 }
 
 export class Chapter implements IChapter {
@@ -16,6 +16,6 @@ export class Chapter implements IChapter {
     public name?: string,
     public description?: string,
     public courseId?: number,
-    public consistsOfs?: IMaterial[]
+    public materials?: IMaterial[]
   ) {}
 }

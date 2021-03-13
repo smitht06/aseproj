@@ -3,10 +3,10 @@
   "clientRootFolder": "",
   "relationships": [
     {
-      "relationshipName": "consistsOf",
+      "relationshipName": "materials",
       "otherEntityName": "material",
       "relationshipType": "one-to-many",
-      "otherEntityRelationshipName": "belongsTo"
+      "otherEntityRelationshipName": "materials"
     }
   ],
   "fields": [

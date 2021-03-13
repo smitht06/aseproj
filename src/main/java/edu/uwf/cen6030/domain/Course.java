@@ -47,8 +47,8 @@ public class Course implements Serializable {
     @Column(name = "created_date", nullable = false)
     private ZonedDateTime createdDate;
 
-    @OneToMany(mappedBy = "belongsTo")
-    private Set<Chapter> owns = new HashSet<>();
+    @OneToMany(mappedBy = "chapters")
+    private Set<Chapter> chapters = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -137,29 +137,29 @@ public class Course implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public Set<Chapter> getOwns() {
-        return owns;
+    public Set<Chapter> getChapters() {
+        return chapters;
     }
 
-    public Course owns(Set<Chapter> chapters) {
-        this.owns = chapters;
+    public Course chapters(Set<Chapter> chapters) {
+        this.chapters = chapters;
         return this;
     }
 
-    public Course addOwns(Chapter chapter) {
-        this.owns.add(chapter);
-        chapter.setBelongsTo(this);
+    public Course addChapters(Chapter chapter) {
+        this.chapters.add(chapter);
+        chapter.setChapters(this);
         return this;
     }
 
-    public Course removeOwns(Chapter chapter) {
-        this.owns.remove(chapter);
-        chapter.setBelongsTo(null);
+    public Course removeChapters(Chapter chapter) {
+        this.chapters.remove(chapter);
+        chapter.setChapters(null);
         return this;
     }
 
-    public void setOwns(Set<Chapter> chapters) {
-        this.owns = chapters;
+    public void setChapters(Set<Chapter> chapters) {
+        this.chapters = chapters;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

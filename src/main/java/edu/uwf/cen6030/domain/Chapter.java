@@ -38,8 +38,8 @@ public class Chapter implements Serializable {
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
-    @OneToMany(mappedBy = "belongsTo")
-    private Set<Material> consistsOfs = new HashSet<>();
+    @OneToMany(mappedBy = "materials")
+    private Set<Material> materials = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -102,29 +102,29 @@ public class Chapter implements Serializable {
         this.courseId = courseId;
     }
 
-    public Set<Material> getConsistsOfs() {
-        return consistsOfs;
+    public Set<Material> getMaterials() {
+        return materials;
     }
 
-    public Chapter consistsOfs(Set<Material> materials) {
-        this.consistsOfs = materials;
+    public Chapter materials(Set<Material> materials) {
+        this.materials = materials;
         return this;
     }
 
-    public Chapter addConsistsOf(Material material) {
-        this.consistsOfs.add(material);
-        material.setBelongsTo(this);
+    public Chapter addMaterials(Material material) {
+        this.materials.add(material);
+        material.setMaterials(this);
         return this;
     }
 
-    public Chapter removeConsistsOf(Material material) {
-        this.consistsOfs.remove(material);
-        material.setBelongsTo(null);
+    public Chapter removeMaterials(Material material) {
+        this.materials.remove(material);
+        material.setMaterials(null);
         return this;
     }
 
-    public void setConsistsOfs(Set<Material> materials) {
-        this.consistsOfs = materials;
+    public void setMaterials(Set<Material> materials) {
+        this.materials = materials;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

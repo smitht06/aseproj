@@ -9,7 +9,7 @@ export interface ICourse {
   description?: string;
   createdById?: number;
   createdDate?: Moment;
-  owns?: IChapter[];
+  chapters?: IChapter[];
 }
 
 export class Course implements ICourse {
@@ -21,6 +21,6 @@ export class Course implements ICourse {
     public description?: string,
     public createdById?: number,
     public createdDate?: Moment,
-    public owns?: IChapter[]
+    public chapters?: IChapter[]
   ) {}
 }
