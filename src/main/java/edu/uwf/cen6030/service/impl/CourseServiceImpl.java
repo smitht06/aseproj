@@ -3,9 +3,12 @@ package edu.uwf.cen6030.service.impl;
 import edu.uwf.cen6030.service.CourseService;
 import edu.uwf.cen6030.domain.Course;
 import edu.uwf.cen6030.repository.CourseRepository;
+import edu.uwf.cen6030.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +26,18 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    private final UserRepository userRepository;
+
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository) {
         this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Course save(Course course) {
         log.debug("Request to save Course : {}", course);
+        Long userId = course.getTeacher().getId();
+        userRepository.findById(userId).ifPresent(course::user);
         return courseRepository.save(course);
     }
 
@@ -37,15 +45,19 @@ public class CourseServiceImpl implements CourseService {
     @Transactional(readOnly = true)
     public List<Course> findAll() {
         log.debug("Request to get all Courses");
-        return courseRepository.findAll();
+        return courseRepository.findAllWithEagerRelationships();
     }
 
+
+    public Page<Course> findAllWithEagerRelationships(Pageable pageable) {
+        return courseRepository.findAllWithEagerRelationships(pageable);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Course> findOne(Long id) {
         log.debug("Request to get Course : {}", id);
-        return courseRepository.findById(id);
+        return courseRepository.findOneWithEagerRelationships(id);
     }
 
     @Override

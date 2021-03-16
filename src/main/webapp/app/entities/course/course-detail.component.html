@@ -32,6 +32,16 @@
                 <dd>
                     <span>{{ course.createdDate }}</span>
                 </dd>
+                <dt><span>Teacher</span></dt>
+                <dd>
+                    {{ course.teacher?.login }}
+                </dd>
+                <dt><span>Students</span></dt>
+                <dd>
+                    <span *ngFor="let students of course.students; let last = last">
+                        {{ students.login }}{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
             </dl>
 
             <button type="submit"

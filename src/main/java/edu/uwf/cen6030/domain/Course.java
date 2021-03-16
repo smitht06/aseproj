@@ -19,8 +19,6 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull
@@ -49,6 +47,18 @@ public class Course implements Serializable {
 
     @OneToMany(mappedBy = "chapters")
     private Set<Chapter> chapters = new HashSet<>();
+
+    @OneToOne
+
+    @MapsId
+    @JoinColumn(name = "id")
+    private User teacher;
+
+    @ManyToMany
+    @JoinTable(name = "course_students",
+               joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "students_id", referencedColumnName = "id"))
+    private Set<User> students = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -160,6 +170,42 @@ public class Course implements Serializable {
 
     public void setChapters(Set<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public User getTeacher() {
+        return teacher;
+    }
+
+    public Course teacher(User user) {
+        this.teacher = user;
+        return this;
+    }
+
+    public void setTeacher(User user) {
+        this.teacher = user;
+    }
+
+    public Set<User> getStudents() {
+        return students;
+    }
+
+    public Course students(Set<User> users) {
+        this.students = users;
+        return this;
+    }
+
+    public Course addStudents(User user) {
+        this.students.add(user);
+        return this;
+    }
+
+    public Course removeStudents(User user) {
+        this.students.remove(user);
+        return this;
+    }
+
+    public void setStudents(Set<User> users) {
+        this.students = users;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

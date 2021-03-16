@@ -9,6 +9,8 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ICourse, Course } from 'app/shared/model/course.model';
 import { CourseService } from './course.service';
+import { IUser } from 'app/core/user/user.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-course-update',
@@ -16,6 +18,7 @@ import { CourseService } from './course.service';
 })
 export class CourseUpdateComponent implements OnInit {
   isSaving = false;
+  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -25,9 +28,16 @@ export class CourseUpdateComponent implements OnInit {
     description: [null, [Validators.required]],
     createdById: [null, [Validators.required]],
     createdDate: [null, [Validators.required]],
+    teacher: [],
+    students: [],
   });
 
-  constructor(protected courseService: CourseService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected courseService: CourseService,
+    protected userService: UserService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ course }) => {
@@ -37,6 +47,8 @@ export class CourseUpdateComponent implements OnInit {
       }
 
       this.updateForm(course);
+
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
   }
 
@@ -49,6 +61,8 @@ export class CourseUpdateComponent implements OnInit {
       description: course.description,
       createdById: course.createdById,
       createdDate: course.createdDate ? course.createdDate.format(DATE_TIME_FORMAT) : null,
+      teacher: course.teacher,
+      students: course.students,
     });
   }
 
@@ -78,6 +92,8 @@ export class CourseUpdateComponent implements OnInit {
       createdDate: this.editForm.get(['createdDate'])!.value
         ? moment(this.editForm.get(['createdDate'])!.value, DATE_TIME_FORMAT)
         : undefined,
+      teacher: this.editForm.get(['teacher'])!.value,
+      students: this.editForm.get(['students'])!.value,
     };
   }
 
@@ -95,5 +111,20 @@ export class CourseUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: IUser): any {
+    return item.id;
+  }
+
+  getSelected(selectedVals: IUser[], option: IUser): IUser {
+    if (selectedVals) {
+      for (let i = 0; i < selectedVals.length; i++) {
+        if (option.id === selectedVals[i].id) {
+          return selectedVals[i];
+        }
+      }
+    }
+    return option;
   }
 }

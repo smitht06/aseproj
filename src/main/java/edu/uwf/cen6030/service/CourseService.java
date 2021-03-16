@@ -2,6 +2,9 @@ package edu.uwf.cen6030.service;
 
 import edu.uwf.cen6030.domain.Course;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,13 @@ public interface CourseService {
      * @return the list of entities.
      */
     List<Course> findAll();
+
+    /**
+     * Get all the courses with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    Page<Course> findAllWithEagerRelationships(Pageable pageable);
 
 
     /**

@@ -2,14 +2,20 @@ package edu.uwf.cen6030.web.rest;
 
 import edu.uwf.cen6030.CourseMaster3KApp;
 import edu.uwf.cen6030.domain.Course;
+import edu.uwf.cen6030.domain.User;
 import edu.uwf.cen6030.repository.CourseRepository;
 import edu.uwf.cen6030.service.CourseService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +25,13 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import static edu.uwf.cen6030.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link CourseResource} REST controller.
  */
 @SpringBootTest(classes = CourseMaster3KApp.class)
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class CourseResourceIT {
@@ -55,6 +64,12 @@ public class CourseResourceIT {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Mock
+    private CourseRepository courseRepositoryMock;
+
+    @Mock
+    private CourseService courseServiceMock;
 
     @Autowired
     private CourseService courseService;
@@ -81,6 +96,11 @@ public class CourseResourceIT {
             .description(DEFAULT_DESCRIPTION)
             .createdById(DEFAULT_CREATED_BY_ID)
             .createdDate(DEFAULT_CREATED_DATE);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        course.setTeacher(user);
         return course;
     }
     /**
@@ -97,6 +117,11 @@ public class CourseResourceIT {
             .description(UPDATED_DESCRIPTION)
             .createdById(UPDATED_CREATED_BY_ID)
             .createdDate(UPDATED_CREATED_DATE);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        course.setTeacher(user);
         return course;
     }
 
@@ -125,6 +150,9 @@ public class CourseResourceIT {
         assertThat(testCourse.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCourse.getCreatedById()).isEqualTo(DEFAULT_CREATED_BY_ID);
         assertThat(testCourse.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+
+        // Validate the id for MapsId, the ids must be same
+        assertThat(testCourse.getId()).isEqualTo(testCourse.getUser().getId());
     }
 
     @Test
@@ -146,6 +174,38 @@ public class CourseResourceIT {
         assertThat(courseList).hasSize(databaseSizeBeforeCreate);
     }
 
+    @Test
+    @Transactional
+    public void updateCourseMapsIdAssociationWithNewId() throws Exception {
+        // Initialize the database
+        courseService.save(course);
+        int databaseSizeBeforeCreate = courseRepository.findAll().size();
+
+
+        // Load the course
+        Course updatedCourse = courseRepository.findById(course.getId()).get();
+        // Disconnect from session so that the updates on updatedCourse are not directly saved in db
+        em.detach(updatedCourse);
+
+        // Update the User with new association value
+        updatedCourse.setUser();
+
+        // Update the entity
+        restCourseMockMvc.perform(put("/api/courses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(updatedCourse)))
+            .andExpect(status().isOk());
+
+        // Validate the Course in the database
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeCreate);
+        Course testCourse = courseList.get(courseList.size() - 1);
+
+        // Validate the id for MapsId, the ids must be same
+        // Uncomment the following line for assertion. However, please note that there is a known issue and uncommenting will fail the test.
+        // Please look at https://github.com/jhipster/generator-jhipster/issues/9100. You can modify this test as necessary.
+        // assertThat(testCourse.getId()).isEqualTo(testCourse.getUser().getId());
+    }
 
     @Test
     @Transactional
@@ -280,6 +340,26 @@ public class CourseResourceIT {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void getAllCoursesWithEagerRelationshipsIsEnabled() throws Exception {
+        when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllCoursesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getCourse() throws Exception {

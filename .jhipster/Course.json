@@ -7,6 +7,23 @@
       "otherEntityName": "chapter",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "chapters"
+    },
+    {
+      "relationshipName": "teacher",
+      "otherEntityName": "user",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": true,
+      "otherEntityRelationshipName": "course"
+    },
+    {
+      "relationshipName": "students",
+      "otherEntityName": "user",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "course"
     }
   ],
   "fields": [
