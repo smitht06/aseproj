@@ -33,13 +33,16 @@ public class Chapter implements Serializable {
     @NotNull
     @Column(name = "description", nullable = false)
     private String description;
+//
+//    @NotNull
+//    @Column(name = "course_id", nullable = false)
+//    private Long courseId;
 
-    @NotNull
-    @Column(name = "course_id", nullable = false)
-    private Long courseId;
-
-    @OneToMany(mappedBy = "materials")
+    @OneToMany(mappedBy = "chapter")
     private Set<Material> materials = new HashSet<>();
+
+    @ManyToOne
+    private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -89,18 +92,18 @@ public class Chapter implements Serializable {
         this.description = description;
     }
 
-    public Long getCourseId() {
-        return courseId;
-    }
+//    public Long getCourseId() {
+//        return courseId;
+//    }
+//
+//    public Chapter courseId(Long courseId) {
+//        this.courseId = courseId;
+//        return this;
+//    }
 
-    public Chapter courseId(Long courseId) {
-        this.courseId = courseId;
-        return this;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
+//    public void setCourseId(Long courseId) {
+//        this.courseId = courseId;
+//    }
 
     public Set<Material> getMaterials() {
         return materials;
@@ -113,13 +116,15 @@ public class Chapter implements Serializable {
 
     public Chapter addMaterials(Material material) {
         this.materials.add(material);
-        material.setMaterials(this);
+//        material.setChapterId(this.id);
+        material.setChapter(this);
         return this;
     }
 
     public Chapter removeMaterials(Material material) {
         this.materials.remove(material);
-        material.setMaterials(null);
+//        material.setChapterId(null);
+        material.setChapter(null);
         return this;
     }
 
@@ -152,7 +157,15 @@ public class Chapter implements Serializable {
             ", number=" + getNumber() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", courseId=" + getCourseId() +
+//            ", courseId=" + getCourseId() +
             "}";
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

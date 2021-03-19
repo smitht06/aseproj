@@ -45,11 +45,10 @@ public class Course implements Serializable {
     @Column(name = "created_date", nullable = false)
     private ZonedDateTime createdDate;
 
-    @OneToMany(mappedBy = "chapters")
+    @OneToMany(mappedBy = "course")
     private Set<Chapter> chapters = new HashSet<>();
 
     @OneToOne
-
     @MapsId
     @JoinColumn(name = "id")
     private User teacher;
@@ -158,13 +157,15 @@ public class Course implements Serializable {
 
     public Course addChapters(Chapter chapter) {
         this.chapters.add(chapter);
-        chapter.setChapters(this);
+//        chapter.setCourseId(this.id);
+        chapter.setCourse(this);
         return this;
     }
 
     public Course removeChapters(Chapter chapter) {
         this.chapters.remove(chapter);
-        chapter.setChapters(null);
+//        chapter.setCourseId(null);
+        chapter.setCourse(null);
         return this;
     }
 

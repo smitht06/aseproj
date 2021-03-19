@@ -31,10 +31,13 @@ public class Material implements Serializable {
     @NotNull
     @Column(name = "link", nullable = false)
     private String link;
+//
+//    @NotNull
+//    @Column(name = "chapter_id", nullable = false)
+//    private Long chapterId;
 
-    @NotNull
-    @Column(name = "chapter_id", nullable = false)
-    private Long chapterId;
+    @ManyToOne
+    private Chapter chapter;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -84,18 +87,18 @@ public class Material implements Serializable {
         this.link = link;
     }
 
-    public Long getChapterId() {
-        return chapterId;
-    }
-
-    public Material chapterId(Long chapterId) {
-        this.chapterId = chapterId;
-        return this;
-    }
-
-    public void setChapterId(Long chapterId) {
-        this.chapterId = chapterId;
-    }
+//    public Long getChapterId() {
+//        return chapterId;
+//    }
+//
+//    public Material chapterId(Long chapterId) {
+//        this.chapterId = chapterId;
+//        return this;
+//    }
+//
+//    public void setChapterId(Long chapterId) {
+//        this.chapterId = chapterId;
+//    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -122,7 +125,15 @@ public class Material implements Serializable {
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
             ", link='" + getLink() + "'" +
-            ", chapterId=" + getChapterId() +
+//            ", chapterId=" + getChapterId() +
             "}";
+    }
+
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
     }
 }
