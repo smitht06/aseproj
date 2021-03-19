@@ -26,18 +26,18 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository) {
         this.courseRepository = courseRepository;
-        this.userRepository = userRepository;
+//        this.userRepository = userRepository;
     }
 
     @Override
     public Course save(Course course) {
         log.debug("Request to save Course : {}", course);
-        Long userId = course.getTeacher().getId();
-        userRepository.findById(userId).ifPresent(course::user);
+//        Long userId = course.getTeacher().getId();
+//        userRepository.findById(userId).ifPresent(course::user);
         return courseRepository.save(course);
     }
 
@@ -64,5 +64,15 @@ public class CourseServiceImpl implements CourseService {
     public void delete(Long id) {
         log.debug("Request to delete Course : {}", id);
         courseRepository.deleteById(id);
+    }
+
+    @Override
+    public Course findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public Course findByCourseNumber(String number) {
+        return null;
     }
 }
