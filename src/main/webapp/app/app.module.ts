@@ -13,6 +13,8 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
+import { FrontPageComponent } from './contentComponents/front-page/front-page.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -24,7 +26,8 @@ import { ErrorComponent } from './layouts/error/error.component';
     CourseMaster3KEntityModule,
     CourseMaster3KAppRoutingModule,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, FrontPageComponent],
+  providers: [NgbActiveModal],
   bootstrap: [MainComponent],
 })
 export class CourseMaster3KAppModule {}
