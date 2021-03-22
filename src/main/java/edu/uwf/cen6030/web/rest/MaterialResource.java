@@ -1,7 +1,7 @@
 package edu.uwf.cen6030.web.rest;
 
 import edu.uwf.cen6030.domain.Material;
-import edu.uwf.cen6030.service.MaterialService;
+import edu.uwf.cen6030.repository.MaterialRepository;
 import edu.uwf.cen6030.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class MaterialResource {
 
     private final Logger log = LoggerFactory.getLogger(MaterialResource.class);
@@ -32,10 +34,10 @@ public class MaterialResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final MaterialService materialService;
+    private final MaterialRepository materialRepository;
 
-    public MaterialResource(MaterialService materialService) {
-        this.materialService = materialService;
+    public MaterialResource(MaterialRepository materialRepository) {
+        this.materialRepository = materialRepository;
     }
 
     /**
@@ -51,7 +53,7 @@ public class MaterialResource {
         if (material.getId() != null) {
             throw new BadRequestAlertException("A new material cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Material result = materialService.save(material);
+        Material result = materialRepository.save(material);
         return ResponseEntity.created(new URI("/api/materials/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -72,7 +74,7 @@ public class MaterialResource {
         if (material.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Material result = materialService.save(material);
+        Material result = materialRepository.save(material);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, material.getId().toString()))
             .body(result);
@@ -86,7 +88,7 @@ public class MaterialResource {
     @GetMapping("/materials")
     public List<Material> getAllMaterials() {
         log.debug("REST request to get all Materials");
-        return materialService.findAll();
+        return materialRepository.findAll();
     }
 
     /**
@@ -98,7 +100,7 @@ public class MaterialResource {
     @GetMapping("/materials/{id}")
     public ResponseEntity<Material> getMaterial(@PathVariable Long id) {
         log.debug("REST request to get Material : {}", id);
-        Optional<Material> material = materialService.findOne(id);
+        Optional<Material> material = materialRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(material);
     }
 
@@ -111,7 +113,7 @@ public class MaterialResource {
     @DeleteMapping("/materials/{id}")
     public ResponseEntity<Void> deleteMaterial(@PathVariable Long id) {
         log.debug("REST request to delete Material : {}", id);
-        materialService.delete(id);
+        materialRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

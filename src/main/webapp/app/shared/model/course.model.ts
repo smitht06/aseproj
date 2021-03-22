@@ -1,6 +1,6 @@
 import { Moment } from 'moment';
-import { IChapter } from 'app/shared/model/chapter.model';
 import { IUser } from 'app/core/user/user.model';
+import { IChapter } from 'app/shared/model/chapter.model';
 
 export interface ICourse {
   id?: number;
@@ -10,8 +10,8 @@ export interface ICourse {
   description?: string;
   createdById?: number;
   createdDate?: Moment;
-  chapters?: IChapter[];
   teacher?: IUser;
+  chapters?: IChapter[];
   students?: IUser[];
 }
 
@@ -24,8 +24,8 @@ export class Course implements ICourse {
     public description?: string,
     public createdById?: number,
     public createdDate?: Moment,
-    public chapters?: IChapter[],
     public teacher?: IUser,
+    public chapters?: IChapter[],
     public students?: IUser[]
   ) {}
 }

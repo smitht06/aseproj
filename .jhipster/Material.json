@@ -1,36 +1,48 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "chapter",
+      "otherEntityRelationshipName": "material",
+      "relationshipName": "chapter",
+      "otherEntityField": "id"
+    }
+  ],
   "fields": [
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "type",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "link",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "chapterId",
-      "fieldType": "Long",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     }
   ],
   "changelogDate": "20210313011211",
   "dto": "no",
   "searchEngine": false,
-  "service": "serviceImpl",
+  "service": "no",
   "entityTableName": "material",
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "no"
+  "pagination": "no",
+  "name": "Material",
+  "embedded": false,
+  "applications": "*"
 }

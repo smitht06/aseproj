@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(ChapterService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Chapter(0, 0, 'AAAAAAA', 'AAAAAAA', 0);
+      elemDefault = new Chapter(0, 0, 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -57,7 +57,6 @@ describe('Service Tests', () => {
             number: 1,
             name: 'BBBBBB',
             description: 'BBBBBB',
-            courseId: 1,
           },
           elemDefault
         );
@@ -77,7 +76,6 @@ describe('Service Tests', () => {
             number: 1,
             name: 'BBBBBB',
             description: 'BBBBBB',
-            courseId: 1,
           },
           elemDefault
         );

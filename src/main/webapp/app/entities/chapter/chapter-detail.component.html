@@ -20,9 +20,11 @@
                 <dd>
                     <span>{{ chapter.description }}</span>
                 </dd>
-                <dt><span>Course Id</span></dt>
+                <dt><span>Course</span></dt>
                 <dd>
-                    <span>{{ chapter.courseId }}</span>
+                    <div *ngIf="chapter.course">
+                        <a [routerLink]="['/course', chapter.course?.id, 'view']">{{ chapter.course?.id }}</a>
+                    </div>
                 </dd>
             </dl>
 

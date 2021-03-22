@@ -1,0 +1,30 @@
+entity Chapter {
+  number Integer required unique,
+  name String required,
+  description String required,
+}
+entity Course {
+  name String required,
+  number Integer required,
+  length String required,
+  description String required,
+  createdById Long required unique,
+  createdDate ZonedDateTime required
+}
+entity Material {
+  name String required,
+  type String required,
+  link String required,
+}
+relationship OneToOne {
+  Course{teacher(login)} to User with jpaDerivedIdentifier
+}
+relationship OneToMany {
+  Chapter{material} to Material{chapter}
+}
+relationship OneToMany {
+  Course{chapter} to Chapter{course}
+}
+relationship ManyToMany {
+  Course{students(login)} to User
+}

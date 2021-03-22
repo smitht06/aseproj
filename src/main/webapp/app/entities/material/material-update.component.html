@@ -48,19 +48,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_chapterId">Chapter Id</label>
-                    <input type="number" class="form-control" name="chapterId" id="field_chapterId"
-                           formControlName="chapterId"/>
-                    <div *ngIf="editForm.get('chapterId')!.invalid && (editForm.get('chapterId')!.dirty || editForm.get('chapterId')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('chapterId')?.errors?.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.get('chapterId')?.errors?.number">
-                            This field should be a number.
-                        </small>
-                    </div>
+                    <label class="form-control-label" for="field_chapter">Chapter</label>
+                    <select class="form-control" id="field_chapter" name="chapter" formControlName="chapter">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="chapterOption.id === editForm.get('chapter')!.value?.id ? editForm.get('chapter')!.value : chapterOption" *ngFor="let chapterOption of chapters; trackBy: trackById">{{ chapterOption.id }}</option>
+                    </select>
                 </div>
             </div>
 

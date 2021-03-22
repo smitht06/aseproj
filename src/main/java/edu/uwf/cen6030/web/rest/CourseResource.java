@@ -1,7 +1,8 @@
 package edu.uwf.cen6030.web.rest;
 
 import edu.uwf.cen6030.domain.Course;
-import edu.uwf.cen6030.service.CourseService;
+import edu.uwf.cen6030.repository.CourseRepository;
+import edu.uwf.cen6030.repository.UserRepository;
 import edu.uwf.cen6030.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +26,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class CourseResource {
 
     private final Logger log = LoggerFactory.getLogger(CourseResource.class);
@@ -33,10 +36,13 @@ public class CourseResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final CourseService courseService;
+    private final CourseRepository courseRepository;
 
-    public CourseResource(CourseService courseService) {
-        this.courseService = courseService;
+    private final UserRepository userRepository;
+
+    public CourseResource(CourseRepository courseRepository, UserRepository userRepository) {
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -55,7 +61,9 @@ public class CourseResource {
         if (Objects.isNull(course.getTeacher())) {
             throw new BadRequestAlertException("Invalid association value provided", ENTITY_NAME, "null");
         }
-        Course result = courseService.save(course);
+        Long userId = course.getTeacher().getId();
+//        userRepository.findById(userId).ifPresent(course::user);
+        Course result = courseRepository.save(course);
         return ResponseEntity.created(new URI("/api/courses/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -76,7 +84,7 @@ public class CourseResource {
         if (course.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Course result = courseService.save(course);
+        Course result = courseRepository.save(course);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, course.getId().toString()))
             .body(result);
@@ -89,9 +97,10 @@ public class CourseResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of courses in body.
      */
     @GetMapping("/courses")
+    @Transactional(readOnly = true)
     public List<Course> getAllCourses(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Courses");
-        return courseService.findAll();
+        return courseRepository.findAllWithEagerRelationships();
     }
 
     /**
@@ -101,9 +110,10 @@ public class CourseResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the course, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/courses/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<Course> getCourse(@PathVariable Long id) {
         log.debug("REST request to get Course : {}", id);
-        Optional<Course> course = courseService.findOne(id);
+        Optional<Course> course = courseRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(course);
     }
 
@@ -116,7 +126,7 @@ public class CourseResource {
     @DeleteMapping("/courses/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         log.debug("REST request to delete Course : {}", id);
-        courseService.delete(id);
+        courseRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

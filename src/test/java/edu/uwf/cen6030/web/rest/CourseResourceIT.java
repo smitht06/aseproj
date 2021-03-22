@@ -4,7 +4,7 @@ import edu.uwf.cen6030.CourseMaster3KApp;
 import edu.uwf.cen6030.domain.Course;
 import edu.uwf.cen6030.domain.User;
 import edu.uwf.cen6030.repository.CourseRepository;
-import edu.uwf.cen6030.service.CourseService;
+import edu.uwf.cen6030.repository.UserRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,15 +64,11 @@ public class CourseResourceIT {
 
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Mock
     private CourseRepository courseRepositoryMock;
-
-    @Mock
-    private CourseService courseServiceMock;
-
-    @Autowired
-    private CourseService courseService;
 
     @Autowired
     private EntityManager em;
@@ -178,9 +174,13 @@ public class CourseResourceIT {
     @Transactional
     public void updateCourseMapsIdAssociationWithNewId() throws Exception {
         // Initialize the database
-        courseService.save(course);
+        courseRepository.saveAndFlush(course);
         int databaseSizeBeforeCreate = courseRepository.findAll().size();
 
+        // Add a new parent entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
 
         // Load the course
         Course updatedCourse = courseRepository.findById(course.getId()).get();
@@ -188,7 +188,7 @@ public class CourseResourceIT {
         em.detach(updatedCourse);
 
         // Update the User with new association value
-        updatedCourse.setUser();
+        updatedCourse.setUser(user);
 
         // Update the entity
         restCourseMockMvc.perform(put("/api/courses")
@@ -342,22 +342,22 @@ public class CourseResourceIT {
     
     @SuppressWarnings({"unchecked"})
     public void getAllCoursesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(courseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+        verify(courseRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllCoursesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(courseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+        verify(courseRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -390,7 +390,7 @@ public class CourseResourceIT {
     @Transactional
     public void updateCourse() throws Exception {
         // Initialize the database
-        courseService.save(course);
+        courseRepository.saveAndFlush(course);
 
         int databaseSizeBeforeUpdate = courseRepository.findAll().size();
 
@@ -443,7 +443,7 @@ public class CourseResourceIT {
     @Transactional
     public void deleteCourse() throws Exception {
         // Initialize the database
-        courseService.save(course);
+        courseRepository.saveAndFlush(course);
 
         int databaseSizeBeforeDelete = courseRepository.findAll().size();
 

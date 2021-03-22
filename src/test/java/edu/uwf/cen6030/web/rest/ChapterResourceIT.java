@@ -3,7 +3,6 @@ package edu.uwf.cen6030.web.rest;
 import edu.uwf.cen6030.CourseMaster3KApp;
 import edu.uwf.cen6030.domain.Chapter;
 import edu.uwf.cen6030.repository.ChapterRepository;
-import edu.uwf.cen6030.service.ChapterService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,14 +38,8 @@ public class ChapterResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_COURSE_ID = 1L;
-    private static final Long UPDATED_COURSE_ID = 2L;
-
     @Autowired
     private ChapterRepository chapterRepository;
-
-    @Autowired
-    private ChapterService chapterService;
 
     @Autowired
     private EntityManager em;
@@ -66,8 +59,7 @@ public class ChapterResourceIT {
         Chapter chapter = new Chapter()
             .number(DEFAULT_NUMBER)
             .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .courseId(DEFAULT_COURSE_ID);
+            .description(DEFAULT_DESCRIPTION);
         return chapter;
     }
     /**
@@ -80,8 +72,7 @@ public class ChapterResourceIT {
         Chapter chapter = new Chapter()
             .number(UPDATED_NUMBER)
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION)
-            .courseId(UPDATED_COURSE_ID);
+            .description(UPDATED_DESCRIPTION);
         return chapter;
     }
 
@@ -107,7 +98,6 @@ public class ChapterResourceIT {
         assertThat(testChapter.getNumber()).isEqualTo(DEFAULT_NUMBER);
         assertThat(testChapter.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testChapter.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testChapter.getCourseId()).isEqualTo(DEFAULT_COURSE_ID);
     }
 
     @Test
@@ -189,25 +179,6 @@ public class ChapterResourceIT {
 
     @Test
     @Transactional
-    public void checkCourseIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = chapterRepository.findAll().size();
-        // set the field null
-        chapter.setCourseId(null);
-
-        // Create the Chapter, which fails.
-
-
-        restChapterMockMvc.perform(post("/api/chapters")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(chapter)))
-            .andExpect(status().isBadRequest());
-
-        List<Chapter> chapterList = chapterRepository.findAll();
-        assertThat(chapterList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllChapters() throws Exception {
         // Initialize the database
         chapterRepository.saveAndFlush(chapter);
@@ -219,8 +190,7 @@ public class ChapterResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(chapter.getId().intValue())))
             .andExpect(jsonPath("$.[*].number").value(hasItem(DEFAULT_NUMBER)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].courseId").value(hasItem(DEFAULT_COURSE_ID.intValue())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
     
     @Test
@@ -236,8 +206,7 @@ public class ChapterResourceIT {
             .andExpect(jsonPath("$.id").value(chapter.getId().intValue()))
             .andExpect(jsonPath("$.number").value(DEFAULT_NUMBER))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.courseId").value(DEFAULT_COURSE_ID.intValue()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
     @Test
     @Transactional
@@ -251,7 +220,7 @@ public class ChapterResourceIT {
     @Transactional
     public void updateChapter() throws Exception {
         // Initialize the database
-        chapterService.save(chapter);
+        chapterRepository.saveAndFlush(chapter);
 
         int databaseSizeBeforeUpdate = chapterRepository.findAll().size();
 
@@ -262,8 +231,7 @@ public class ChapterResourceIT {
         updatedChapter
             .number(UPDATED_NUMBER)
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION)
-            .courseId(UPDATED_COURSE_ID);
+            .description(UPDATED_DESCRIPTION);
 
         restChapterMockMvc.perform(put("/api/chapters")
             .contentType(MediaType.APPLICATION_JSON)
@@ -277,7 +245,6 @@ public class ChapterResourceIT {
         assertThat(testChapter.getNumber()).isEqualTo(UPDATED_NUMBER);
         assertThat(testChapter.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testChapter.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testChapter.getCourseId()).isEqualTo(UPDATED_COURSE_ID);
     }
 
     @Test
@@ -300,7 +267,7 @@ public class ChapterResourceIT {
     @Transactional
     public void deleteChapter() throws Exception {
         // Initialize the database
-        chapterService.save(chapter);
+        chapterRepository.saveAndFlush(chapter);
 
         int databaseSizeBeforeDelete = chapterRepository.findAll().size();
 

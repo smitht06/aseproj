@@ -141,9 +141,9 @@ liquibase {
     activities {
         main {
             driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/CourseMaster3K"
-            username "CourseMaster3K"
-            password ""
+            url "jdbc:postgresql://localhost:5432/CourseMaster3KDB"
+            username "postgres"
+            password "s3cret"
             changeLogFile "src/main/resources/config/liquibase/master.xml"
             defaultSchemaName ""
             logLevel "debug"

@@ -26,7 +26,7 @@
                     <th scope="col" ><span>Number</span></th>
                     <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Description</span></th>
-                    <th scope="col" ><span>Course Id</span></th>
+                    <th scope="col" ><span>Course</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -36,7 +36,11 @@
                     <td>{{ chapter.number }}</td>
                     <td>{{ chapter.name }}</td>
                     <td>{{ chapter.description }}</td>
-                    <td>{{ chapter.courseId }}</td>
+                    <td>
+                        <div *ngIf="chapter.course">
+                            <a [routerLink]="['/course', chapter.course?.id, 'view']" >{{ chapter.course?.id }}</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
