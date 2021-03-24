@@ -46,7 +46,6 @@ public class Course implements Serializable {
     private ZonedDateTime createdDate;
 
     @OneToOne
-
     @MapsId
     @JoinColumn(name = "id")
     private User teacher;
