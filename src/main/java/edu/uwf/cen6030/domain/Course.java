@@ -45,13 +45,13 @@ public class Course implements Serializable {
     @Column(name = "created_date", nullable = false)
     private ZonedDateTime createdDate;
 
-    @OneToMany(mappedBy = "course")
-    private Set<Chapter> chapters = new HashSet<>();
-
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
     private User teacher;
+
+    @OneToMany(mappedBy = "course")
+    private Set<Chapter> chapters = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "course_students",
@@ -146,33 +146,6 @@ public class Course implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public Set<Chapter> getChapters() {
-        return chapters;
-    }
-
-    public Course chapters(Set<Chapter> chapters) {
-        this.chapters = chapters;
-        return this;
-    }
-
-    public Course addChapters(Chapter chapter) {
-        this.chapters.add(chapter);
-//        chapter.setCourseId(this.id);
-        chapter.setCourse(this);
-        return this;
-    }
-
-    public Course removeChapters(Chapter chapter) {
-        this.chapters.remove(chapter);
-//        chapter.setCourseId(null);
-        chapter.setCourse(null);
-        return this;
-    }
-
-    public void setChapters(Set<Chapter> chapters) {
-        this.chapters = chapters;
-    }
-
     public User getTeacher() {
         return teacher;
     }
@@ -184,6 +157,31 @@ public class Course implements Serializable {
 
     public void setTeacher(User user) {
         this.teacher = user;
+    }
+
+    public Set<Chapter> getChapters() {
+        return chapters;
+    }
+
+    public Course chapters(Set<Chapter> chapters) {
+        this.chapters = chapters;
+        return this;
+    }
+
+    public Course addChapter(Chapter chapter) {
+        this.chapters.add(chapter);
+        chapter.setCourse(this);
+        return this;
+    }
+
+    public Course removeChapter(Chapter chapter) {
+        this.chapters.remove(chapter);
+        chapter.setCourse(null);
+        return this;
+    }
+
+    public void setChapters(Set<Chapter> chapters) {
+        this.chapters = chapters;
     }
 
     public Set<User> getStudents() {

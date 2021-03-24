@@ -1,7 +1,7 @@
 package edu.uwf.cen6030.web.rest;
 
 import edu.uwf.cen6030.domain.Chapter;
-import edu.uwf.cen6030.service.ChapterService;
+import edu.uwf.cen6030.repository.ChapterRepository;
 import edu.uwf.cen6030.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class ChapterResource {
 
     private final Logger log = LoggerFactory.getLogger(ChapterResource.class);
@@ -32,10 +34,10 @@ public class ChapterResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ChapterService chapterService;
+    private final ChapterRepository chapterRepository;
 
-    public ChapterResource(ChapterService chapterService) {
-        this.chapterService = chapterService;
+    public ChapterResource(ChapterRepository chapterRepository) {
+        this.chapterRepository = chapterRepository;
     }
 
     /**
@@ -51,7 +53,7 @@ public class ChapterResource {
         if (chapter.getId() != null) {
             throw new BadRequestAlertException("A new chapter cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Chapter result = chapterService.save(chapter);
+        Chapter result = chapterRepository.save(chapter);
         return ResponseEntity.created(new URI("/api/chapters/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -72,7 +74,7 @@ public class ChapterResource {
         if (chapter.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Chapter result = chapterService.save(chapter);
+        Chapter result = chapterRepository.save(chapter);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, chapter.getId().toString()))
             .body(result);
@@ -86,7 +88,7 @@ public class ChapterResource {
     @GetMapping("/chapters")
     public List<Chapter> getAllChapters() {
         log.debug("REST request to get all Chapters");
-        return chapterService.findAll();
+        return chapterRepository.findAll();
     }
 
     /**
@@ -98,7 +100,7 @@ public class ChapterResource {
     @GetMapping("/chapters/{id}")
     public ResponseEntity<Chapter> getChapter(@PathVariable Long id) {
         log.debug("REST request to get Chapter : {}", id);
-        Optional<Chapter> chapter = chapterService.findOne(id);
+        Optional<Chapter> chapter = chapterRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(chapter);
     }
 
@@ -111,7 +113,7 @@ public class ChapterResource {
     @DeleteMapping("/chapters/{id}")
     public ResponseEntity<Void> deleteChapter(@PathVariable Long id) {
         log.debug("REST request to delete Chapter : {}", id);
-        chapterService.delete(id);
+        chapterRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

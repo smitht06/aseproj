@@ -3,7 +3,6 @@ package edu.uwf.cen6030.web.rest;
 import edu.uwf.cen6030.CourseMaster3KApp;
 import edu.uwf.cen6030.domain.Material;
 import edu.uwf.cen6030.repository.MaterialRepository;
-import edu.uwf.cen6030.service.MaterialService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,14 +38,8 @@ public class MaterialResourceIT {
     private static final String DEFAULT_LINK = "AAAAAAAAAA";
     private static final String UPDATED_LINK = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_CHAPTER_ID = 1L;
-    private static final Long UPDATED_CHAPTER_ID = 2L;
-
     @Autowired
     private MaterialRepository materialRepository;
-
-    @Autowired
-    private MaterialService materialService;
 
     @Autowired
     private EntityManager em;
@@ -66,8 +59,7 @@ public class MaterialResourceIT {
         Material material = new Material()
             .name(DEFAULT_NAME)
             .type(DEFAULT_TYPE)
-            .link(DEFAULT_LINK)
-            .chapterId(DEFAULT_CHAPTER_ID);
+            .link(DEFAULT_LINK);
         return material;
     }
     /**
@@ -80,8 +72,7 @@ public class MaterialResourceIT {
         Material material = new Material()
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
-            .link(UPDATED_LINK)
-            .chapterId(UPDATED_CHAPTER_ID);
+            .link(UPDATED_LINK);
         return material;
     }
 
@@ -107,7 +98,6 @@ public class MaterialResourceIT {
         assertThat(testMaterial.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testMaterial.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testMaterial.getLink()).isEqualTo(DEFAULT_LINK);
-        assertThat(testMaterial.getChapterId()).isEqualTo(DEFAULT_CHAPTER_ID);
     }
 
     @Test
@@ -189,25 +179,6 @@ public class MaterialResourceIT {
 
     @Test
     @Transactional
-    public void checkChapterIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = materialRepository.findAll().size();
-        // set the field null
-        material.setChapterId(null);
-
-        // Create the Material, which fails.
-
-
-        restMaterialMockMvc.perform(post("/api/materials")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(material)))
-            .andExpect(status().isBadRequest());
-
-        List<Material> materialList = materialRepository.findAll();
-        assertThat(materialList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllMaterials() throws Exception {
         // Initialize the database
         materialRepository.saveAndFlush(material);
@@ -219,8 +190,7 @@ public class MaterialResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(material.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
-            .andExpect(jsonPath("$.[*].link").value(hasItem(DEFAULT_LINK)))
-            .andExpect(jsonPath("$.[*].chapterId").value(hasItem(DEFAULT_CHAPTER_ID.intValue())));
+            .andExpect(jsonPath("$.[*].link").value(hasItem(DEFAULT_LINK)));
     }
     
     @Test
@@ -236,8 +206,7 @@ public class MaterialResourceIT {
             .andExpect(jsonPath("$.id").value(material.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
-            .andExpect(jsonPath("$.link").value(DEFAULT_LINK))
-            .andExpect(jsonPath("$.chapterId").value(DEFAULT_CHAPTER_ID.intValue()));
+            .andExpect(jsonPath("$.link").value(DEFAULT_LINK));
     }
     @Test
     @Transactional
@@ -251,7 +220,7 @@ public class MaterialResourceIT {
     @Transactional
     public void updateMaterial() throws Exception {
         // Initialize the database
-        materialService.save(material);
+        materialRepository.saveAndFlush(material);
 
         int databaseSizeBeforeUpdate = materialRepository.findAll().size();
 
@@ -262,8 +231,7 @@ public class MaterialResourceIT {
         updatedMaterial
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
-            .link(UPDATED_LINK)
-            .chapterId(UPDATED_CHAPTER_ID);
+            .link(UPDATED_LINK);
 
         restMaterialMockMvc.perform(put("/api/materials")
             .contentType(MediaType.APPLICATION_JSON)
@@ -277,7 +245,6 @@ public class MaterialResourceIT {
         assertThat(testMaterial.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testMaterial.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testMaterial.getLink()).isEqualTo(UPDATED_LINK);
-        assertThat(testMaterial.getChapterId()).isEqualTo(UPDATED_CHAPTER_ID);
     }
 
     @Test
@@ -300,7 +267,7 @@ public class MaterialResourceIT {
     @Transactional
     public void deleteMaterial() throws Exception {
         // Initialize the database
-        materialService.save(material);
+        materialRepository.saveAndFlush(material);
 
         int databaseSizeBeforeDelete = materialRepository.findAll().size();
 

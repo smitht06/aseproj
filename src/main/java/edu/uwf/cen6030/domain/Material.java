@@ -1,5 +1,6 @@
 package edu.uwf.cen6030.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -31,12 +32,9 @@ public class Material implements Serializable {
     @NotNull
     @Column(name = "link", nullable = false)
     private String link;
-//
-//    @NotNull
-//    @Column(name = "chapter_id", nullable = false)
-//    private Long chapterId;
 
     @ManyToOne
+    @JsonIgnoreProperties(value = "materials", allowSetters = true)
     private Chapter chapter;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -87,18 +85,18 @@ public class Material implements Serializable {
         this.link = link;
     }
 
-//    public Long getChapterId() {
-//        return chapterId;
-//    }
-//
-//    public Material chapterId(Long chapterId) {
-//        this.chapterId = chapterId;
-//        return this;
-//    }
-//
-//    public void setChapterId(Long chapterId) {
-//        this.chapterId = chapterId;
-//    }
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public Material chapter(Chapter chapter) {
+        this.chapter = chapter;
+        return this;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -125,7 +123,6 @@ public class Material implements Serializable {
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
             ", link='" + getLink() + "'" +
-//            ", chapterId=" + getChapterId() +
             "}";
     }
 

@@ -3,68 +3,84 @@
   "clientRootFolder": "",
   "relationships": [
     {
-      "relationshipName": "chapters",
-      "otherEntityName": "chapter",
-      "relationshipType": "one-to-many",
-      "otherEntityRelationshipName": "chapters"
-    },
-    {
-      "relationshipName": "teacher",
-      "otherEntityName": "user",
       "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "course",
+      "relationshipName": "teacher",
       "otherEntityField": "login",
       "ownerSide": true,
-      "useJPADerivedIdentifier": true,
-      "otherEntityRelationshipName": "course"
+      "useJPADerivedIdentifier": true
     },
     {
-      "relationshipName": "students",
-      "otherEntityName": "user",
+      "relationshipType": "one-to-many",
+      "otherEntityName": "chapter",
+      "otherEntityRelationshipName": "course",
+      "relationshipName": "chapter"
+    },
+    {
       "relationshipType": "many-to-many",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "course",
+      "relationshipName": "students",
       "otherEntityField": "login",
-      "ownerSide": true,
-      "otherEntityRelationshipName": "course"
+      "ownerSide": true
     }
   ],
   "fields": [
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "number",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "length",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "description",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "createdById",
       "fieldType": "Long",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "createdDate",
       "fieldType": "ZonedDateTime",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     }
   ],
   "changelogDate": "20210313004312",
   "dto": "no",
   "searchEngine": false,
-  "service": "serviceImpl",
+  "service": "no",
   "entityTableName": "course",
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "no"
+  "pagination": "no",
+  "name": "Course",
+  "embedded": false,
+  "applications": "*"
 }

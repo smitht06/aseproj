@@ -3,41 +3,53 @@
   "clientRootFolder": "",
   "relationships": [
     {
-      "relationshipName": "materials",
-      "otherEntityName": "material",
       "relationshipType": "one-to-many",
-      "otherEntityRelationshipName": "materials"
+      "otherEntityName": "material",
+      "otherEntityRelationshipName": "chapter",
+      "relationshipName": "material"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "course",
+      "otherEntityRelationshipName": "chapter",
+      "relationshipName": "course",
+      "otherEntityField": "id"
     }
   ],
   "fields": [
     {
       "fieldName": "number",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "description",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "courseId",
-      "fieldType": "Long",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     }
   ],
   "changelogDate": "20210313010811",
   "dto": "no",
   "searchEngine": false,
-  "service": "serviceImpl",
+  "service": "no",
   "entityTableName": "chapter",
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "no"
+  "pagination": "no",
+  "name": "Chapter",
+  "embedded": false,
+  "applications": "*"
 }

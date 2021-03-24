@@ -36,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course save(Course course) {
         log.debug("Request to save Course : {}", course);
-//        Long userId = course.getTeacher().getId();
+        Long userId = course.getTeacher().getId();
 //        userRepository.findById(userId).ifPresent(course::user);
         return courseRepository.save(course);
     }

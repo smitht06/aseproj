@@ -52,19 +52,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_courseId">Course Id</label>
-                    <input type="number" class="form-control" name="courseId" id="field_courseId"
-                           formControlName="courseId"/>
-                    <div *ngIf="editForm.get('courseId')!.invalid && (editForm.get('courseId')!.dirty || editForm.get('courseId')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('courseId')?.errors?.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.get('courseId')?.errors?.number">
-                            This field should be a number.
-                        </small>
-                    </div>
+                    <label class="form-control-label" for="field_course">Course</label>
+                    <select class="form-control" id="field_course" name="course" formControlName="course">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="courseOption.id === editForm.get('course')!.value?.id ? editForm.get('course')!.value : courseOption" *ngFor="let courseOption of courses; trackBy: trackById">{{ courseOption.id }}</option>
+                    </select>
                 </div>
             </div>
 

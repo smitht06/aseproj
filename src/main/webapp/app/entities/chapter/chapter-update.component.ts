@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 
 import { IChapter, Chapter } from 'app/shared/model/chapter.model';
 import { ChapterService } from './chapter.service';
+import { ICourse } from 'app/shared/model/course.model';
+import { CourseService } from 'app/entities/course/course.service';
 
 @Component({
   selector: 'jhi-chapter-update',
@@ -14,20 +16,28 @@ import { ChapterService } from './chapter.service';
 })
 export class ChapterUpdateComponent implements OnInit {
   isSaving = false;
+  courses: ICourse[] = [];
 
   editForm = this.fb.group({
     id: [],
     number: [null, [Validators.required]],
     name: [null, [Validators.required]],
     description: [null, [Validators.required]],
-    courseId: [null, [Validators.required]],
+    course: [],
   });
 
-  constructor(protected chapterService: ChapterService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected chapterService: ChapterService,
+    protected courseService: CourseService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ chapter }) => {
       this.updateForm(chapter);
+
+      this.courseService.query().subscribe((res: HttpResponse<ICourse[]>) => (this.courses = res.body || []));
     });
   }
 
@@ -37,7 +47,7 @@ export class ChapterUpdateComponent implements OnInit {
       number: chapter.number,
       name: chapter.name,
       description: chapter.description,
-      courseId: chapter.courseId,
+      course: chapter.course,
     });
   }
 
@@ -62,7 +72,7 @@ export class ChapterUpdateComponent implements OnInit {
       number: this.editForm.get(['number'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
-      courseId: this.editForm.get(['courseId'])!.value,
+      course: this.editForm.get(['course'])!.value,
     };
   }
 
@@ -80,5 +90,9 @@ export class ChapterUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: ICourse): any {
+    return item.id;
   }
 }

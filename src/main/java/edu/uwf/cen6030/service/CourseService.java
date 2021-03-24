@@ -1,6 +1,5 @@
 package edu.uwf.cen6030.service;
 
-
 import edu.uwf.cen6030.domain.Course;
 
 import org.springframework.data.domain.Page;
@@ -51,8 +50,4 @@ public interface CourseService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-    
-    Course findByName(String name);
-  
-    Course findByCourseNumber(String number);
 }

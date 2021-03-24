@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(MaterialService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Material(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 0);
+      elemDefault = new Material(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -57,7 +57,6 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             type: 'BBBBBB',
             link: 'BBBBBB',
-            chapterId: 1,
           },
           elemDefault
         );
@@ -77,7 +76,6 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             type: 'BBBBBB',
             link: 'BBBBBB',
-            chapterId: 1,
           },
           elemDefault
         );

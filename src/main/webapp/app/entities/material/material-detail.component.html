@@ -20,9 +20,11 @@
                 <dd>
                     <span>{{ material.link }}</span>
                 </dd>
-                <dt><span>Chapter Id</span></dt>
+                <dt><span>Chapter</span></dt>
                 <dd>
-                    <span>{{ material.chapterId }}</span>
+                    <div *ngIf="material.chapter">
+                        <a [routerLink]="['/chapter', material.chapter?.id, 'view']">{{ material.chapter?.id }}</a>
+                    </div>
                 </dd>
             </dl>
 

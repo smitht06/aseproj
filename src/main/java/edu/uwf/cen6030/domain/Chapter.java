@@ -1,5 +1,6 @@
 package edu.uwf.cen6030.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -33,15 +34,12 @@ public class Chapter implements Serializable {
     @NotNull
     @Column(name = "description", nullable = false)
     private String description;
-//
-//    @NotNull
-//    @Column(name = "course_id", nullable = false)
-//    private Long courseId;
 
     @OneToMany(mappedBy = "chapter")
     private Set<Material> materials = new HashSet<>();
 
     @ManyToOne
+    @JsonIgnoreProperties(value = "chapters", allowSetters = true)
     private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -92,19 +90,6 @@ public class Chapter implements Serializable {
         this.description = description;
     }
 
-//    public Long getCourseId() {
-//        return courseId;
-//    }
-//
-//    public Chapter courseId(Long courseId) {
-//        this.courseId = courseId;
-//        return this;
-//    }
-
-//    public void setCourseId(Long courseId) {
-//        this.courseId = courseId;
-//    }
-
     public Set<Material> getMaterials() {
         return materials;
     }
@@ -114,22 +99,33 @@ public class Chapter implements Serializable {
         return this;
     }
 
-    public Chapter addMaterials(Material material) {
+    public Chapter addMaterial(Material material) {
         this.materials.add(material);
-//        material.setChapterId(this.id);
         material.setChapter(this);
         return this;
     }
 
-    public Chapter removeMaterials(Material material) {
+    public Chapter removeMaterial(Material material) {
         this.materials.remove(material);
-//        material.setChapterId(null);
         material.setChapter(null);
         return this;
     }
 
     public void setMaterials(Set<Material> materials) {
         this.materials = materials;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public Chapter course(Course course) {
+        this.course = course;
+        return this;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -157,7 +153,6 @@ public class Chapter implements Serializable {
             ", number=" + getNumber() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-//            ", courseId=" + getCourseId() +
             "}";
     }
 
