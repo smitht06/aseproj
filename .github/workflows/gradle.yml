@@ -22,5 +22,12 @@ jobs:
         java-version: 11.0
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: assemble (but do not test yet) with Gradle
+    - name: assemble with Gradle
       run: ./gradlew assemble
+    - name: run the unit and integration tests
+      run: ./gradlew test
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}

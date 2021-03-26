@@ -148,7 +148,7 @@ public class CourseResourceIT {
         assertThat(testCourse.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
 
         // Validate the id for MapsId, the ids must be same
-        assertThat(testCourse.getId()).isEqualTo(testCourse.getUser().getId());
+        assertThat(testCourse.getId()).isEqualTo(testCourse.getTeacher().getId());
     }
 
     @Test
@@ -188,7 +188,7 @@ public class CourseResourceIT {
         em.detach(updatedCourse);
 
         // Update the User with new association value
-        updatedCourse.setUser(user);
+        updatedCourse.setTeacher(user);
 
         // Update the entity
         restCourseMockMvc.perform(put("/api/courses")
@@ -339,7 +339,7 @@ public class CourseResourceIT {
             .andExpect(jsonPath("$.[*].createdById").value(hasItem(DEFAULT_CREATED_BY_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllCoursesWithEagerRelationshipsIsEnabled() throws Exception {
         when(courseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
