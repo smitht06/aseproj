@@ -126,11 +126,5 @@ public class Material implements Serializable {
             "}";
     }
 
-    public Chapter getChapter() {
-        return chapter;
-    }
 
-    public void setChapter(Chapter chapter) {
-        this.chapter = chapter;
-    }
 }
