@@ -31,3 +31,13 @@ jobs:
       with:
         report_paths: '**/build/test-results/test/TEST-*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Deploy package to prod
+      run: rsync -avp build/libs/course-master-3-k-0.0.1-SNAPSHOT.jar opc@web.cm3.tech:/home/opc/app.jar
+    - name: Restart java service
+      run: ssh opc@web.cm3.tech systemctl restart --user cm3.service
