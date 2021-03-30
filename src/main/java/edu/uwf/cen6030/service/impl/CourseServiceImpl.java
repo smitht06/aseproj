@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,12 @@ public class CourseServiceImpl implements CourseService {
     public void delete(Long id) {
         log.debug("Request to delete Course : {}", id);
         courseRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Course> search(final String searchTerm) {
+        log.debug("Request to search for Course : {}", searchTerm);
+        return courseRepository.findAllByNameContainingIgnoreCase(searchTerm);
     }
 
 

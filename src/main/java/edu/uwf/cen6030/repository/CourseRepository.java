@@ -26,4 +26,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("select course from Course course left join fetch course.students where course.id =:id")
     Optional<Course> findOneWithEagerRelationships(@Param("id") Long id);
+
+    List<Course> findAllByNameContainingIgnoreCase(String searchTerm);
 }
