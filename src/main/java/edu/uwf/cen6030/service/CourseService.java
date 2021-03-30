@@ -51,5 +51,10 @@ public interface CourseService {
      */
     void delete(Long id);
 
+    /**
+     * Search for courses by name
+     * @param searchTerm the query
+     * @return all courses with searchTerm in the name (case insensitive)
+     */
     List<Course> search(final String searchTerm);
 }
